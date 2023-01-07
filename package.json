@@ -1,0 +1,30 @@
+{
+  "name": "CanSat-mission-control",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "start": "vite",
+    "preview": "vite preview",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@react-three/fiber": "^8.9.2",
+    "chart.js": "^4.1.1",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.1.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.148.0"
+  },
+  "devDependencies": {
+    "babel-preset-nano-react-app": "^0.1.0",
+    "vite": "^3.2.1"
+  },
+  "babel": {
+    "presets": [
+      "nano-react-app"
+    ]
+  }
+}
