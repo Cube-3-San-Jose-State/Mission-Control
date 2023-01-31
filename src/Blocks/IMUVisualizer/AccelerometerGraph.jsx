@@ -9,13 +9,13 @@ const RAW_TO_MPH_RATIO = 9.80665 / 16384; //Raw values range ±32750, 32750 = 1G
 
 
 function AccelerometerGraph(props){
-	const [xAccelQueue, setxAccelQueue] = useState(new Queue(75));
-	const [yAccelQueue, setyAccelQueue] = useState(new Queue(75));
-	const [zAccelQueue, setzAccelQueue] = useState(new Queue(75));
+	const [xAccelQueue, setxAccelQueue] = useState(new Queue(50));
+	const [yAccelQueue, setyAccelQueue] = useState(new Queue(50));
+	const [zAccelQueue, setzAccelQueue] = useState(new Queue(50));
  	const [graphData, setGraphData] = useState({
 		datasets: [{
 			label: 'x',
-			data: [],
+			data: [ {x: Date.now(), y: 5} ],
 			backgroundColor: 'rgb(255, 0, 0)',
 		}]
 	});
@@ -65,7 +65,6 @@ function AccelerometerGraph(props){
 		xAccelQueue.enqueue( {x: props.timestamp, y: (props.imu.ACCEL_X * RAW_TO_MPH_RATIO)});
 		yAccelQueue.enqueue( {x: props.timestamp, y: props.imu.ACCEL_Y * RAW_TO_MPH_RATIO});
 		zAccelQueue.enqueue( {x: props.timestamp, y: props.imu.ACCEL_Z * RAW_TO_MPH_RATIO});
-
 		setGraphData({
 			datasets: [
 				{
@@ -81,16 +80,14 @@ function AccelerometerGraph(props){
 					backgroundColor: 'rgb(0, 255, 0)',
 					borderColor: 'rgb(0, 255, 0)',
 					showLine: true
-				}
-				,
+				},
 				{
 					label: 'z',
 					data: zAccelQueue.getArray(),
 					backgroundColor: 'rgb(0, 0, 255)',
 					borderColor: 'rgb(0, 0, 255)',
 					showLine: true
-				}
-				
+				}	
 			]
 		});
 

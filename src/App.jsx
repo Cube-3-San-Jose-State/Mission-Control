@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PrettyData from "./Blocks/PrettyData/PrettyData.jsx"
 import GyroscopeScene from './Blocks/GyroscopeScene/GryoscopeScene.jsx';
 import IMUVisualizer from './Blocks/IMUVisualizer/IMUVisualizer.jsx';
+import TimeGraph from './Blocks/TimeGraph/TimeGraph.jsx';
 class App extends Component {
 	constructor(props){	
 		super(props);
@@ -19,7 +20,6 @@ class App extends Component {
 				"CAMERA_STATUS": null,
 				"BAROMETER": {
 					"ALTITUDE": null,
-					"PRESSURE": null,
 					"TEMPERATURE": null
 				},
 				"IMU": {
@@ -31,6 +31,7 @@ class App extends Component {
 					"GYRO_Z": null,
 					"PITCH": null,
 					"ROLL": null,
+					"YAW": null,
 				},
 				"BATTERY": null
 			}
@@ -49,13 +50,45 @@ class App extends Component {
 						<PrettyData data={this.state.data}/>
 					</div>
 					<div className="block">
-						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
+						<GyroscopeScene imu={this.state.data["IMU"]}/>
 					</div>
 					<div className="block">
-						<GyroscopeScene imu={this.state.data["IMU"]}/>
+						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
-					<div className="block">gps info</div>
-					<div className="block">fuel gage</div>
+					<div className="block">
+						<TimeGraph 
+							title='Altitude' 
+							timestamp={this.state.data["TIMESTAMP"]}
+							maxMin={[90, 65]}
+							unit='ft'
+							datasets={[
+								{
+									label: 'x',
+									data: this.state.data["BAROMETER"]["ALTITUDE"] * 3.28084,
+									borderColor: 'orange',
+									backgroundColor: 'orange',
+									showLine: true 
+								}
+							]}
+						></TimeGraph>
+					</div>
+					<div className="block">
+					<TimeGraph 
+							title='Temperature' 
+							timestamp={this.state.data["TIMESTAMP"]}
+							maxMin={[75, 60]}
+							unit='F'
+							datasets={[
+								{
+									label: 'x',
+									data: (this.state.data["BAROMETER"]["TEMPERATURE"] * 1.8) + 32,
+									backgroundColor: 'yellow',
+									borderColor: 'yellow',
+									showLine: true 
+								}
+							]}
+						></TimeGraph>
+					</div>
 					<div className="block">altitude data</div> 
 				</div>
 			</>
@@ -134,8 +167,7 @@ class App extends Component {
 
 			data["BAROMETER"] = {
 				ALTITUDE: parsed["BAR"][0],
-				PRESSURE: parsed["BAR"][1],
-				TEMPERATURE: parsed["BAR"][2]
+				TEMPERATURE: parsed["BAR"][1]
 			};
 
 			data["IMU"] = {
@@ -146,11 +178,12 @@ class App extends Component {
 				GYRO_Y: parsed["IMU"][4],
 				GYRO_Z: parsed["IMU"][5],
 				PITCH: parsed["IMU"][6],
-				ROLL: parsed["IMU"][7]
+				ROLL: parsed["IMU"][7],
+				YAW: parsed["IMU"][8]
 			}
 
 			data["BATTERY"] = parsed["BAT"];
-
+			
 			this.setState({data: data});
 		} catch (err){
 			console.error(err);

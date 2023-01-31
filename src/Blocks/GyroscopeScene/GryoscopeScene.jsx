@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom'
 import React, { useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import PrettyData from '../PrettyData/PrettyData';
 import "./GyroscopeScene.css";
 
 /*
@@ -14,9 +15,10 @@ function GyroscopeModel(props) {
     const mesh = useRef();
     const [hovered, setHover] = useState(false);
     const [active, setActive] = useState(false);
+    const DEGREE_TO_RADIANS = Math.PI / 180;
     useFrame(function(state, delta){
-        mesh.current.rotation.x = -(props.imu["ROLL"]);
-        mesh.current.rotation.y = (props.imu["PITCH"]);
+        mesh.current.rotation.y = (props.imu["ROLL"]);
+        mesh.current.rotation.x = -(props.imu["PITCH"]);
     })
 
     return(
@@ -28,8 +30,8 @@ function GyroscopeModel(props) {
             onPointerOver={(event) => setHover(true)}
             onPointerOut={(event) => setHover(false)}
         >
-            <boxGeometry args={[5, 2, 1]}/>
-            <meshLambertMaterial color={'#0047AB'} />
+            <cylinderGeometry args={[1, 1, 5]}/>
+            <meshLambertMaterial color={'#fc0303'} />
 			<axesHelper args={[3, 3, 3]}/>
         </mesh>
     )
@@ -38,6 +40,7 @@ function GyroscopeModel(props) {
 function GryoscopeScene(props) {
   	return (
 		<div id="gyroscope-container">
+            <PrettyData data={props.imu}/>
 			<Canvas>
 				<ambientLight intensity={0.1} />
 				<directionalLight position={[0, 0, 5]} />
