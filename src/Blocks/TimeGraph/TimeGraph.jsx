@@ -42,7 +42,7 @@ ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Toolt
 function TimeGraph(props) {
     let queuesHolder = [];
     for ( let i = 0; i < props.datasets.length; i++ ){
-        queuesHolder.push(new Queue(50));
+        queuesHolder.push(new Queue(25));
     }
     const [queues, setQueues] = useState(queuesHolder);
     const [graphData, setGraphData] = useState({
@@ -56,9 +56,7 @@ function TimeGraph(props) {
     let options = {
 		type: 'line',
 		responsive: true,
-		animation: {
-			duration: 0
-		},
+		animation: false,
 		plugins: {
 			title: {
 				display: true,
@@ -67,7 +65,7 @@ function TimeGraph(props) {
 			decimation: {
 				enabled: true,
 				algorithm: 'lttb',
-				samples: 50
+				samples: 500
 			}
 		},
 		scales: {
@@ -75,7 +73,10 @@ function TimeGraph(props) {
 				type: 'time',
 				time: {
 					unit: 'second'
-				}
+				},
+                ticks: {
+                    maxRotation: 0
+                }
 			},
 			y: {
 				max: props.maxMin[0],

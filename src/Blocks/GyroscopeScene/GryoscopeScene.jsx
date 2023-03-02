@@ -17,8 +17,8 @@ function GyroscopeModel(props) {
     const [active, setActive] = useState(false);
     const DEGREE_TO_RADIANS = Math.PI / 180;
     useFrame(function(state, delta){
-        mesh.current.rotation.y = (props.imu["ROLL"]);
-        mesh.current.rotation.x = -(props.imu["PITCH"]);
+        mesh.current.rotation.y = - (props.imu["ROLL"]);
+        mesh.current.rotation.x = 1.57079633 + (props.imu["PITCH"]);
     })
 
     return(

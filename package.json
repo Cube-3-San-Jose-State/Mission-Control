@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "description": "",
   "license": "MIT",
+  "homepage": "https://Cube-3-San-Jose-State.github.io/mission-control",
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
-    "build": "vite build"
+    "build": "vite build",
+    "predeploy": "vite build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -20,6 +23,7 @@
   },
   "devDependencies": {
     "babel-preset-nano-react-app": "^0.1.0",
+    "gh-pages": "^5.0.0",
     "vite": "^3.2.1"
   },
   "babel": {

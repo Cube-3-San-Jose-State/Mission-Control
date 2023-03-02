@@ -3,6 +3,8 @@ import PrettyData from "./Blocks/PrettyData/PrettyData.jsx"
 import GyroscopeScene from './Blocks/GyroscopeScene/GryoscopeScene.jsx';
 import IMUVisualizer from './Blocks/IMUVisualizer/IMUVisualizer.jsx';
 import TimeGraph from './Blocks/TimeGraph/TimeGraph.jsx';
+import FlightModeVisualizer from './Blocks/FlightModeVisualizer/FlightModeVisualizer.jsx';
+
 class App extends Component {
 	constructor(props){	
 		super(props);
@@ -56,7 +58,24 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
-						<TimeGraph 
+					</div>
+					<div className="block">
+					<TimeGraph 
+							title='Temperature' 
+							timestamp={this.state.data["TIMESTAMP"]}
+							maxMin={[90, 70]}
+							unit='F'
+							datasets={[
+								{
+									label: 'x',
+									data: (this.state.data["BAROMETER"]["TEMPERATURE"] * 1.8) + 32,
+									backgroundColor: 'yellow',
+									borderColor: 'yellow',
+									showLine: true 
+								}
+							]}
+					></TimeGraph>
+					<TimeGraph 
 							title='Altitude' 
 							timestamp={this.state.data["TIMESTAMP"]}
 							maxMin={[90, 65]}
@@ -70,26 +89,9 @@ class App extends Component {
 									showLine: true 
 								}
 							]}
-						></TimeGraph>
+					></TimeGraph>
 					</div>
-					<div className="block">
-					<TimeGraph 
-							title='Temperature' 
-							timestamp={this.state.data["TIMESTAMP"]}
-							maxMin={[75, 60]}
-							unit='F'
-							datasets={[
-								{
-									label: 'x',
-									data: (this.state.data["BAROMETER"]["TEMPERATURE"] * 1.8) + 32,
-									backgroundColor: 'yellow',
-									borderColor: 'yellow',
-									showLine: true 
-								}
-							]}
-						></TimeGraph>
-					</div>
-					<div className="block">altitude data</div> 
+					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/></div> 
 				</div>
 			</>
     	)
@@ -156,9 +158,11 @@ class App extends Component {
 			if (parsed["ISO"] == "0") data["IS_OPERATIONAL"] = "YES";
 			if (parsed["ISO"] == "1") data["IS_OPERATIONAL"] = "NO";
 
-			if (parsed["FLM"] == "F") data["FLIGHT_MODE"] = "FLIGHT";
-			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LANDING";
-			if (parsed["FLM"] == "P") data["FLIGHT_MODE"] = "PREDEPLOYED";
+			if (parsed["FLM"] == "U") data["FLIGHT_MODE"] = "PREFLIGHT";
+			if (parsed["FLM"] == "A") data["FLIGHT_MODE"] = "ASCENT";
+			if (parsed["FLM"] == "D") data["FLIGHT_MODE"] = "DEPLOYED";
+			if (parsed["FLM"] == "P") data["FLIGHT_MODE"] = "PARACHUTE";
+			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LANDED";
 
 			data["AIR_SPEED"] = parsed["SPD"];
 
@@ -185,6 +189,7 @@ class App extends Component {
 			data["BATTERY"] = parsed["BAT"];
 			
 			this.setState({data: data});
+			console.log(data);
 		} catch (err){
 			console.error(err);
 		}
