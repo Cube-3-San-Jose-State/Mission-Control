@@ -1,4 +1,4 @@
-Currently a mission control platform for the Cube³ Project JAVELIN, with plans to turn it into a universal satellite mission control platform for all future Cube³ projects..
+Currently a mission control platform for the Cube³ Project JAVELIN, with plans to turn it into a universal satellite mission control platform for all future Cube³ projects.
 
 <h3><a href="https://cube3-mission-control.netlify.app/">Link to current Netlify deployment</a></h3>
 <h4><a href="https://www.youtube.com/watch?v=XpveqQ8JX9g">Link to demo</a></h3>
