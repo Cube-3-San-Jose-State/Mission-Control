@@ -2,31 +2,86 @@ html{
     background-color: black;
     color: white;
     font-family: monospace;
+    width: 100vw;
+    height: 100vh;
+    --blue: #000080;
+    --gold: #F3A21F;
 }
 
 body{
-    margin-left: 15vw;
-    margin-right: 15vw;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    display: flex;  
+    width: 100%;
+    height: 100%;
 }
 
 .blocks-container{
     display: grid;
+    width: 70%;
+    height: 100%;
+    align-content: center;
+    margin-left: 15%;
+    margin-right: 15%;
     grid-template-columns: repeat(3, 1fr);
 }
 
 .block{
-    border: 1px orange solid;
+    border: 1px var(--gold) solid;
     aspect-ratio: 1;
     font-size: .75vw;
+    max-width: 100%;
+    max-height: 100%;
 }
 
-.menu {
+#sidebar {
     position: absolute;
     display: flex;
-    flex-direction: column;
-    top: 1vw;
-    left: 1vw;
+    justify-content: center;
+    margin-top: 3vh;
+    min-width: 15%;
+    max-width: 15%;
 }
+
+#menu {
+    display: flex;
+    width: 80%;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+    #menu h2, #menu h3{
+        color: var(--gold);
+        margin-bottom: .1em;
+    }
+
+    #menu .subheading{
+        margin-top: .1em;
+        margin-bottom: 1em;
+    }
+
+    #menu img {
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    #menu button {
+        width: 50%; 
+        background-color: transparent;
+        color: var(--gold);
+        border: 1px var(--gold) solid;
+    }
+
+        #menu button:hover {
+            color: white;
+            border: 1px white solid;
+            cursor: pointer;
+        }
 
 #output{
     width: 100%;

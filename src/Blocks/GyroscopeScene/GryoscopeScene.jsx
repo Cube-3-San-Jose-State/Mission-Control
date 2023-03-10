@@ -17,8 +17,8 @@ function GyroscopeModel(props) {
     const [active, setActive] = useState(false);
     const DEGREE_TO_RADIANS = Math.PI / 180;
     useFrame(function(state, delta){
-        mesh.current.rotation.y = - (props.imu["ROLL"]);
-        mesh.current.rotation.x = 1.57079633 + (props.imu["PITCH"]);
+        mesh.current.rotation.y = (props.imu["ROLL"]);
+        mesh.current.rotation.x = -1 * (1.57079633 + (props.imu["PITCH"]));
     })
 
     return(
@@ -30,10 +30,10 @@ function GyroscopeModel(props) {
             onPointerOver={(event) => setHover(true)}
             onPointerOut={(event) => setHover(false)}
         >
-            <cylinderGeometry args={[1, 1, 5]}/>
+            <boxGeometry args={[2, 5, 1]}/>
             <meshLambertMaterial color={'#fc0303'} />
 			<axesHelper args={[3, 3, 3]}/>
-        </mesh>
+        </mesh> 
     )
 }
 

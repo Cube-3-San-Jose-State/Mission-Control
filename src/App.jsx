@@ -43,9 +43,15 @@ class App extends Component {
 	render() {
     	return (
       		<>
-				<div className="menu">
-					<button id="open" onClick={this.readSerial.bind(this)}>Connect</button>
-					<button id="record">Record Data</button>
+				<div id="sidebar">
+					
+					<div id="menu">
+						<img src="./assets/icon.png" alt="logo" />
+						<h2>Project JAVELIN</h2>
+						<h3 className="subheading">Mission Control</h3>	
+						<button id="open" onClick={this.readSerial.bind(this)}>Connect</button>
+						<button id="record">Record Data</button>
+					</div>
 				</div>
 				<div className="blocks-container">
 					<div className="block">
@@ -92,7 +98,7 @@ class App extends Component {
 					></TimeGraph>
 					</div>
 					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/></div> 
-				</div>
+				</div> 
 			</>
     	)
   	}
@@ -129,7 +135,8 @@ class App extends Component {
 						builderString += value;
 					}
 					
-					if (value.includes("\n") && buffer <= 0){
+					if (value.includes("}") && buffer <= 0){
+						builderString = builderString.substring(0, builderString.length-1 );
 						this.parseInput(builderString);
 						builderString = "";
 					}
@@ -189,7 +196,6 @@ class App extends Component {
 			data["BATTERY"] = parsed["BAT"];
 			
 			this.setState({data: data});
-			console.log(data);
 		} catch (err){
 			console.error(err);
 		}
