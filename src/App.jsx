@@ -46,7 +46,7 @@ class App extends Component {
 				<div id="sidebar">
 					
 					<div id="menu">
-						<img src="./assets/icon.png" alt="logo" />
+						<img src="https://i.ibb.co/nzByFQw/icon.png" alt="icon" border="0"/>
 						<h2>Project JAVELIN</h2>
 						<h3 className="subheading">Mission Control</h3>	
 						<button id="open" onClick={this.readSerial.bind(this)}>Connect</button>
