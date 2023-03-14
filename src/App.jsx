@@ -17,9 +17,11 @@ class App extends Component {
 				"TIMESTAMP": null,
 				"MILLIS": null,
 				"HEARTBEAT": null,
-				"IS_OPERATIONAL": null,
-				"AIR_SPEED": null,
 				"CAMERA_STATUS": null,
+				"GPS": {
+					"LATITUDE": null,
+					"LONGITUDE": null
+				},
 				"BAROMETER": {
 					"ALTITUDE": null,
 					"TEMPERATURE": null
@@ -34,8 +36,7 @@ class App extends Component {
 					"PITCH": null,
 					"ROLL": null,
 					"YAW": null,
-				},
-				"BATTERY": null
+				}
 			}
 		}
 	}
@@ -84,7 +85,7 @@ class App extends Component {
 					<TimeGraph 
 							title='Altitude' 
 							timestamp={this.state.data["TIMESTAMP"]}
-							maxMin={[90, 65]}
+							maxMin={[120, 50]}
 							unit='ft'
 							datasets={[
 								{
@@ -135,7 +136,7 @@ class App extends Component {
 						builderString += value;
 					}
 					
-					if (value.includes("}") && buffer <= 0){
+					if (value.includes("*") && buffer <= 0){	
 						builderString = builderString.substring(0, builderString.length-1 );
 						this.parseInput(builderString);
 						builderString = "";
@@ -162,19 +163,19 @@ class App extends Component {
 			
 			data["HEARTBEAT"] = parsed["HRB"];
 			
-			if (parsed["ISO"] == "0") data["IS_OPERATIONAL"] = "YES";
-			if (parsed["ISO"] == "1") data["IS_OPERATIONAL"] = "NO";
-
 			if (parsed["FLM"] == "U") data["FLIGHT_MODE"] = "PREFLIGHT";
 			if (parsed["FLM"] == "A") data["FLIGHT_MODE"] = "ASCENT";
 			if (parsed["FLM"] == "D") data["FLIGHT_MODE"] = "DEPLOYED";
 			if (parsed["FLM"] == "P") data["FLIGHT_MODE"] = "PARACHUTE";
 			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LANDED";
 
-			data["AIR_SPEED"] = parsed["SPD"];
-
 			if (parsed["CAM"] == "0") data["CAMERA_STATUS"] = "ON";
 			if (parsed["CAM"] == "1") data["CAMERA_STATUS"] = "OFF";
+
+			data["GPS"] = {
+				LATITUDE: parsed["GPS"][0],
+				LONGITUDE: parsed["GPS"][1],
+			}
 
 			data["BAROMETER"] = {
 				ALTITUDE: parsed["BAR"][0],
@@ -193,8 +194,6 @@ class App extends Component {
 				YAW: parsed["IMU"][8]
 			}
 
-			data["BATTERY"] = parsed["BAT"];
-			
 			this.setState({data: data});
 		} catch (err){
 			console.error(err);
