@@ -4,6 +4,7 @@ import GyroscopeScene from './Blocks/GyroscopeScene/GryoscopeScene.jsx';
 import IMUVisualizer from './Blocks/IMUVisualizer/IMUVisualizer.jsx';
 import TimeGraph from './Blocks/TimeGraph/TimeGraph.jsx';
 import FlightModeVisualizer from './Blocks/FlightModeVisualizer/FlightModeVisualizer.jsx';
+import UpdateLog from './Blocks/UpdateLog/UpdateLog.jsx'
 
 class App extends Component {
 	constructor(props){	
@@ -65,6 +66,7 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
+						<UpdateLog data={this.state.data}/>
 					</div>
 					<div className="block">
 					<TimeGraph 
@@ -115,6 +117,7 @@ class App extends Component {
 		const port = await navigator.serial.requestPort();
 		let builderString = "";
 		await port.open({ baudRate: 9600, bufferSize: 600 });
+		let prevHrtBeat = 0;
 		
 		while (port.readable){
 			const textDecoder = new TextDecoderStream();
@@ -137,9 +140,10 @@ class App extends Component {
 					}
 					
 					if (value.includes("*") && buffer <= 0){	
-						builderString = builderString.substring(0, builderString.length-1 );
+						builderString = builderString.substring(0, builderString.length-1 ); 
 						this.parseInput(builderString);
 						builderString = "";
+						
 					}
 				}
 			} catch (error) {
@@ -153,7 +157,7 @@ class App extends Component {
 			let parsed = JSON.parse(input);
 			let data = {};
 			
-			if (parsed["ID"] == "P") data["ID"] = "PAYLOAD";
+			if (parsed["ID"] == "P") data["ID"] = "PAYLOAD"; 
 			if (parsed["ID"] == "C") data["ID"] = "CONTAINER";
 			
 			data["SECONDS"] = performance.now() / 1000;
