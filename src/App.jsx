@@ -38,7 +38,8 @@ class App extends Component {
 					"ROLL": null,
 					"YAW": null,
 				}
-			}
+			},
+			rawSerial: ""
 		}
 	}
 
@@ -66,7 +67,7 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
-						<UpdateLog data={this.state.data}/>
+						<UpdateLog data={this.state.data} rawSerial={this.state.rawSerial}/>
 					</div>
 					<div className="block">
 					<TimeGraph 
@@ -87,7 +88,7 @@ class App extends Component {
 					<TimeGraph 
 							title='Altitude' 
 							timestamp={this.state.data["TIMESTAMP"]}
-							maxMin={[120, 50]}
+							maxMin={[0, 20]}
 							unit='ft'
 							datasets={[
 								{
@@ -136,14 +137,16 @@ class App extends Component {
 					if (buffer >=0) {
 						buffer--;
 					} else {
-						builderString += value;
+						if (builderString !== "\n") {
+							builderString += value;
+						}
 					}
 					
 					if (value.includes("*") && buffer <= 0){	
-						builderString = builderString.substring(0, builderString.length-1 ); 
+						this.setState({ rawSerial: this.state.rawSerial + builderString });
+						builderString = builderString.substring(builderString.indexOf("{"), builderString.indexOf("*") ); 
 						this.parseInput(builderString);
 						builderString = "";
-						
 					}
 				}
 			} catch (error) {
@@ -154,6 +157,7 @@ class App extends Component {
 
 	parseInput(input){
 		try{
+			console.log(input);
 			let parsed = JSON.parse(input);
 			let data = {};
 			
@@ -168,10 +172,11 @@ class App extends Component {
 			data["HEARTBEAT"] = parsed["HRB"];
 			
 			if (parsed["FLM"] == "U") data["FLIGHT_MODE"] = "PREFLIGHT";
-			if (parsed["FLM"] == "A") data["FLIGHT_MODE"] = "ASCENT";
+			if (parsed["FLM"] == "A") data["FLIGHT_MODE"] = "ARMED"
+			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LAUNCHED";
 			if (parsed["FLM"] == "D") data["FLIGHT_MODE"] = "DEPLOYED";
-			if (parsed["FLM"] == "P") data["FLIGHT_MODE"] = "PARACHUTE";
-			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LANDED";
+			if (parsed["FLM"] == "S") data["FLIGHT_MODE"] = "PARACHUTE";
+			if (parsed["FLM"] == "G") data["FLIGHT_MODE"] = "LANDED";
 
 			if (parsed["CAM"] == "0") data["CAMERA_STATUS"] = "ON";
 			if (parsed["CAM"] == "1") data["CAMERA_STATUS"] = "OFF";

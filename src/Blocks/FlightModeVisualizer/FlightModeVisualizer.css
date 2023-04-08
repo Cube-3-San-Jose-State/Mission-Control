@@ -18,6 +18,11 @@
     border: 1px solid white;
 }
 
+.flight-mode-preflight {
+    color: white;
+    background-color: red;
+}
+
 .flight-mode-active {
     color: white;
     background-color: green;
