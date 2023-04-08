@@ -6,27 +6,33 @@ class UpdateLog extends Component {
 			this.serialLog = React.createRef();
 
 			this.state = {
-				data: props.data,
+				logs: [],
 				displayString: ""
 			};
 		}
 
-		errorCheck(){
-			this.setState({displayString: "example error " + Math.random()});
-		}
+		
 
-		componentDidUpdate(){
-			this.serialLog.current.scrollTop = this.serialLog.current.scrollHeight;
-			// this.errorCheck();
+		componentDidUpdate(previousProps){
+			let previousData = previousProps.data;
+			let currentData = this.props.data;
+
+			if (currentData["HEARTBEAT"] != previousData["HEARTBEAT"] + 1 ) {
+				let packetLost = currentData["HEARTBEAT"] - previousData["HEARTBEAT"];
+				console.log("TRANSMISSION ERROR at HB: "+previousData["HEARTBEAT"]+".\nTotal packets lost: "+packetLost);
+			}
 		}
 
 
     	render() { 
 			return (
-				<div>
-					<h2>Raw Serial Output</h2>
-	    			<textarea ref={this.serialLog} readOnly value={this.props.rawSerial}/>
+	    		<div>
+					<h1>Update Log</h1>
+					<div id="updateLog">
+						{...this.state.logs}
+					</div>
 				</div>
+
     		)
 		}
 }
