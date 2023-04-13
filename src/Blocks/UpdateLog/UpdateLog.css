@@ -1,0 +1,19 @@
+#update-log-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#update-log {
+    min-height: 30vh;
+    max-height: 30vh;
+    width: 12vw;
+    border: solid 1px var(--gold);
+    overflow-y: auto;
+    border: solid 1px var(--gold);
+}
+
+.update-log-message{
+    border-bottom: solid 1px var(--gold);
+}

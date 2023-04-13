@@ -46,8 +46,7 @@ class App extends Component {
 	render() {
     	return (
       		<>
-				<div id="sidebar">
-					
+				<div id="sidebar-l">
 					<div id="menu">
 						<img src="https://i.ibb.co/nzByFQw/icon.png" alt="icon" border="0"/>
 						<h2>Project JAVELIN</h2>
@@ -56,6 +55,7 @@ class App extends Component {
 						<button id="record">Record Data</button>
 					</div>
 				</div>
+
 				<div className="blocks-container">
 					<div className="block">
 						<PrettyData data={this.state.data}/>
@@ -67,7 +67,6 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
-						<UpdateLog data={this.state.data} rawSerial={this.state.rawSerial}/>
 					</div>
 					<div className="block">
 					<TimeGraph 
@@ -103,6 +102,12 @@ class App extends Component {
 					</div>
 					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/></div> 
 				</div> 
+
+				<div id="sidebar-r">
+					<div id="logs">
+						<UpdateLog data={this.state.data} rawSerial={this.state.rawSerial}/>
+					</div>
+				</div>
 			</>
     	)
   	}
@@ -157,7 +162,6 @@ class App extends Component {
 
 	parseInput(input){
 		try{
-			console.log(input);
 			let parsed = JSON.parse(input);
 			let data = {};
 			

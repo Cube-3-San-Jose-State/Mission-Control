@@ -20,6 +20,10 @@ body{
     height: 100%;
 }
 
+h1, h2, h3 {
+    color: var(--gold);
+}
+
 .blocks-container{
     display: grid;
     max-width: 70%;
@@ -39,7 +43,7 @@ body{
     overflow: hidden;
 }
 
-#sidebar {
+#sidebar-l {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -83,6 +87,20 @@ body{
             border: 1px white solid;
             cursor: pointer;
         }
+
+
+#sidebar-r {
+    position: absolute;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    min-width: 15%;
+    max-width: 15%;
+}
+
+    #logs {
+        width: 80%;
+    }
 
 #output{
     width: 100%;

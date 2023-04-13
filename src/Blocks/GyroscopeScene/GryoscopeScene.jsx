@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import PrettyData from '../PrettyData/PrettyData';
 import "./GyroscopeScene.css";
@@ -16,9 +16,15 @@ function GyroscopeModel(props) {
     const [hovered, setHover] = useState(false);
     const [active, setActive] = useState(false);
     const DEGREE_TO_RADIANS = Math.PI / 180;
+
     useFrame(function(state, delta){
+        // mesh.current.rotation.x = (props.imu["PITCH"]);
+        // mesh.current.rotation.y = (props.imu["ROLL"]);
+        // mesh.current.rotation.z = (props.imu["YAW"]);
+
         mesh.current.rotation.y = (props.imu["ROLL"]);
         mesh.current.rotation.x = -1 * (1.57079633 + (props.imu["PITCH"]));
+        // mesh.current.rotation.z = (props.imu["YAW"]);
     })
 
     return(

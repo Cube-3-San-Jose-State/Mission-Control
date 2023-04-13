@@ -6,9 +6,41 @@ class PrettyData extends Component {
         
     }
 
+    units = {
+        SECONDS: "s",
+        LATITUDE: "°",
+        LONGITUDE: "°",
+        ALTITUDE: "ft",
+        TEMPERATURE: "°F",
+        ACCEL_X: "m/s²",
+        ACCEL_Y: "m/s²",
+        ACCEL_Z: "m/s²",
+        GYRO_X: "°",
+        GYRO_Y: "°",
+        GYRO_Z: "°"
+    }
+
     render() {
         return (
-            <pre style={{position: 'absolute'}}>{JSON.stringify(this.props.data, null, 4)}</pre>
+            <div>
+                <pre style={{position: 'absolute'}}>{JSON.stringify(this.props.data, null, 4)}</pre>
+            </div>
+        )
+    }
+}
+
+class DataLine extends Component {
+    constructor(props){
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <span className="data-name">{this.props.dataName}</span>
+                <span className="data-value">{this.props.dataValue}</span>
+                <span className="data-name">{this.props.dataName}</span>
+            </div>
         )
     }
 }
