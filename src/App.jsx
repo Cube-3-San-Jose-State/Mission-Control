@@ -120,7 +120,6 @@ class App extends Component {
 		}
 	}
 
-
 	async readSerial() {
 		const port = await navigator.serial.requestPort();
 		let builderString = "";
