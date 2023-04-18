@@ -7,7 +7,7 @@ import FlightModeVisualizer from './Blocks/FlightModeVisualizer/FlightModeVisual
 import UpdateLog from './Blocks/UpdateLog/UpdateLog.jsx'
 
 class App extends Component {
-	constructor(props){	
+	constructor(props) {
 		super(props);
 		this.startingTime = new Date(Date.now());
 		this.dateHolder = new Date();
@@ -39,38 +39,40 @@ class App extends Component {
 					"YAW": null,
 				}
 			},
-			rawSerial: ""
+			rawSerial: "",
+			// declares dataString as empty string for accumulation
+			dataString: ""
 		}
 	}
 
 	render() {
-    	return (
-      		<>
+		return (
+			<>
 				<div id="sidebar-l">
 					<div id="menu">
-						<img src="https://i.ibb.co/nzByFQw/icon.png" alt="icon" border="0"/>
+						<img src="https://i.ibb.co/nzByFQw/icon.png" alt="icon" border="0" />
 						<h2>Project JAVELIN</h2>
-						<h3 className="subheading">Mission Control</h3>	
+						<h3 className="subheading">Mission Control</h3>
 						<button id="open" onClick={this.readSerial.bind(this)}>Connect</button>
-						<button id="record">Record Data</button>
+						<button id="record" onClick={this.recordData.bind(this)}>Record Data</button>
 					</div>
 				</div>
 
 				<div className="blocks-container">
 					<div className="block">
-						<PrettyData data={this.state.data}/>
+						<PrettyData data={this.state.data} />
 					</div>
 					<div className="block">
-						<GyroscopeScene imu={this.state.data["IMU"]}/>
+						<GyroscopeScene imu={this.state.data["IMU"]} />
 					</div>
 					<div className="block">
-						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
-					</div> 
+						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]} />
+					</div>
 					<div className="block">
 					</div>
 					<div className="block">
-					<TimeGraph 
-							title='Temperature' 
+						<TimeGraph
+							title='Temperature'
 							timestamp={this.state.data["TIMESTAMP"]}
 							maxMin={[90, 70]}
 							unit='F'
@@ -80,12 +82,12 @@ class App extends Component {
 									data: (this.state.data["BAROMETER"]["TEMPERATURE"] * 1.8) + 32,
 									backgroundColor: 'yellow',
 									borderColor: 'yellow',
-									showLine: true 
+									showLine: true
 								}
 							]}
-					></TimeGraph>
-					<TimeGraph 
-							title='Altitude' 
+						></TimeGraph>
+						<TimeGraph
+							title='Altitude'
 							timestamp={this.state.data["TIMESTAMP"]}
 							maxMin={[0, 20]}
 							unit='ft'
@@ -95,61 +97,63 @@ class App extends Component {
 									data: this.state.data["BAROMETER"]["ALTITUDE"] * 3.28084,
 									borderColor: 'orange',
 									backgroundColor: 'orange',
-									showLine: true 
+									showLine: true
 								}
 							]}
-					></TimeGraph>
+						></TimeGraph>
 					</div>
-					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/></div> 
-				</div> 
+					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]} /></div>
+				</div>
 
 				<div id="sidebar-r">
 					<div id="logs">
-						<UpdateLog data={this.state.data} rawSerial={this.state.rawSerial}/>
+						<UpdateLog data={this.state.data} rawSerial={this.state.rawSerial} />
 					</div>
 				</div>
 			</>
-    	)
-  	}
+		)
+	}
 
-	componentDidMount(){
-		if (!("serial" in navigator)){
+	componentDidMount() {
+		if (!("serial" in navigator)) {
 			alert('Web Serial is not supported in this browser. Try opening this page in either Chrome or Edge.');
 		}
 	}
 
 
-	async readSerial(){
+	async readSerial() {
 		const port = await navigator.serial.requestPort();
 		let builderString = "";
 		await port.open({ baudRate: 9600, bufferSize: 600 });
 		let prevHrtBeat = 0;
-		
-		while (port.readable){
+		let dataString = "";
+		this.addData();	// start adding data to the dataString
+
+		while (port.readable) {
 			const textDecoder = new TextDecoderStream();
 			const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
 			const reader = textDecoder.readable.getReader();
 			let buffer = 15;
-			
-			try { 
-				while(true){
+
+			try {
+				while (true) {
 					const { value, done } = await reader.read();
 					if (done) {
 						reader.releaseLock();
 						break;
 					}
 
-					if (buffer >=0) {
+					if (buffer >= 0) {
 						buffer--;
 					} else {
 						if (builderString !== "\n") {
 							builderString += value;
 						}
 					}
-					
-					if (value.includes("*") && buffer <= 0){	
+
+					if (value.includes("*") && buffer <= 0) {
 						this.setState({ rawSerial: this.state.rawSerial + builderString });
-						builderString = builderString.substring(builderString.indexOf("{"), builderString.indexOf("*") ); 
+						builderString = builderString.substring(builderString.indexOf("{"), builderString.indexOf("*"));
 						this.parseInput(builderString);
 						builderString = "";
 					}
@@ -160,21 +164,21 @@ class App extends Component {
 		}
 	}
 
-	parseInput(input){
-		try{
+	parseInput(input) {
+		try {
 			let parsed = JSON.parse(input);
 			let data = {};
-			
-			if (parsed["ID"] == "P") data["ID"] = "PAYLOAD"; 
+
+			if (parsed["ID"] == "P") data["ID"] = "PAYLOAD";
 			if (parsed["ID"] == "C") data["ID"] = "CONTAINER";
-			
+
 			data["SECONDS"] = performance.now() / 1000;
 			this.dateHolder = new Date(this.startingTime.getTime() + data["SECONDS"] * 1000);
-			
+
 			data["TIMESTAMP"] = this.dateHolder;
-			
+
 			data["HEARTBEAT"] = parsed["HRB"];
-			
+
 			if (parsed["FLM"] == "U") data["FLIGHT_MODE"] = "PREFLIGHT";
 			if (parsed["FLM"] == "A") data["FLIGHT_MODE"] = "ARMED"
 			if (parsed["FLM"] == "L") data["FLIGHT_MODE"] = "LAUNCHED";
@@ -207,10 +211,28 @@ class App extends Component {
 				YAW: parsed["IMU"][8]
 			}
 
-			this.setState({data: data});
-		} catch (err){
+			this.setState({ data: data });
+		} catch (err) {
 			console.error(err);
 		}
+	}
+
+	async addData() {
+		//add this.state.data to dataString every second 
+		dataString = dataString + setTimeout(this.state.data, 1000);
+		setTimeout(console.log("wrote to string"), 1000);
+	}
+
+	async recordData() {
+		console.log(dataString);
+		/*try {
+	//record data to file
+	const fs = require('fs')
+	fs.writeFile("../temp.txt", dataString, (err));
+	}
+	catch (err) {
+	console.error(err);
+	}*/
 	}
 }
 

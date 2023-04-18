@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class PrettyData extends Component {
     constructor(props) {
         super(props)
-        
+
     }
 
     units = {
@@ -23,14 +23,14 @@ class PrettyData extends Component {
     render() {
         return (
             <div>
-                <pre style={{position: 'absolute'}}>{JSON.stringify(this.props.data, null, 4)}</pre>
+                <pre style={{ position: 'absolute' }}>{JSON.stringify(this.props.data, null, 4)}</pre>
             </div>
         )
     }
 }
 
 class DataLine extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
