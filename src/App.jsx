@@ -5,6 +5,9 @@ import IMUVisualizer from './Blocks/IMUVisualizer/IMUVisualizer.jsx';
 import TimeGraph from './Blocks/TimeGraph/TimeGraph.jsx';
 import FlightModeVisualizer from './Blocks/FlightModeVisualizer/FlightModeVisualizer.jsx';
 import UpdateLog from './Blocks/UpdateLog/UpdateLog.jsx'
+import LeafMap from './Blocks/Map/Map.jsx';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css';
 
 class App extends Component {
 	constructor(props){	
@@ -67,10 +70,11 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
+						<LeafMap></LeafMap>
 					</div>
 					<div className="block">
 					<TimeGraph 
-							title='Temperature' 
+							title='Temperature'
 							timestamp={this.state.data["TIMESTAMP"]}
 							maxMin={[90, 70]}
 							unit='F'

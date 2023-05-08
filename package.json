@@ -16,12 +16,15 @@
     "@react-three/fiber": "^8.9.2",
     "chart.js": "^4.1.1",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "leaflet": "^1.9.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.1.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "three": "^0.148.0"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.3",
     "babel-preset-nano-react-app": "^0.1.0",
     "gh-pages": "^5.0.0",
     "vite": "^3.2.1"
