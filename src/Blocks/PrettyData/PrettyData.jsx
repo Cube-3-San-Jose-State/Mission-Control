@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 
 class PrettyData extends Component {
     constructor(props) {
-        super(props)
-        
+        super(props)        
     }
 
     units = {
@@ -39,7 +38,7 @@ class DataLine extends Component {
             <div>
                 <span className="data-name">{this.props.dataName}</span>
                 <span className="data-value">{this.props.dataValue}</span>
-                <span className="data-name">{this.props.dataName}</span>
+                <span className="data-unit">{this.props.dataUnit}</span>
             </div>
         )
     }

@@ -79,8 +79,8 @@ function TimeGraph(props) {
                 }
 			},
 			y: {
-				max: props.maxMin[0],
-				min: props.maxMin[1],
+                suggestedMin: props.maxMin[1],
+                suggestedMax: props.maxMin[0],
 				ticks: {
 					callback: function(val, i, vals){
 						return val + props.unit

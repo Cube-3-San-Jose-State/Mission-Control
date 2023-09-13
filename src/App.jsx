@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import JSON5 from 'json5'
 import PrettyData from "./Blocks/PrettyData/PrettyData.jsx"
 import GyroscopeScene from './Blocks/GyroscopeScene/GryoscopeScene.jsx';
 import IMUVisualizer from './Blocks/IMUVisualizer/IMUVisualizer.jsx';
@@ -54,7 +55,7 @@ class App extends Component {
 						<button id="open" onClick={this.readSerial.bind(this)}>Connect</button>
 						<button id="record">Record Data</button>
 					</div>
-				</div>
+				</div> 
 
 				<div className="blocks-container">
 					<div className="block">
@@ -77,7 +78,7 @@ class App extends Component {
 							datasets={[
 								{
 									label: 'x',
-									data: (this.state.data["BAROMETER"]["TEMPERATURE"] * 1.8) + 32,
+									data: (this.state.data["BAROMETER"]["TEMPERATURE"]),
 									backgroundColor: 'yellow',
 									borderColor: 'yellow',
 									showLine: true 
@@ -88,11 +89,11 @@ class App extends Component {
 							title='Altitude' 
 							timestamp={this.state.data["TIMESTAMP"]}
 							maxMin={[0, 20]}
-							unit='ft'
+							unit='m'
 							datasets={[
 								{
 									label: 'x',
-									data: this.state.data["BAROMETER"]["ALTITUDE"] * 3.28084,
+									data: this.state.data["BAROMETER"]["ALTITUDE"],
 									borderColor: 'orange',
 									backgroundColor: 'orange',
 									showLine: true 
@@ -100,7 +101,9 @@ class App extends Component {
 							]}
 					></TimeGraph>
 					</div>
-					<div className="block"><FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/></div> 
+					<div className="block">
+						<FlightModeVisualizer mode={this.state.data["FLIGHT_MODE"]}/>
+					</div> 
 				</div> 
 
 				<div id="sidebar-r">
@@ -121,7 +124,7 @@ class App extends Component {
 
 	async readSerial(){
 		const port = await navigator.serial.requestPort();
-		let builderString = "";
+		let builderString = '';
 		await port.open({ baudRate: 9600, bufferSize: 600 });
 		let prevHrtBeat = 0;
 		
@@ -138,20 +141,24 @@ class App extends Component {
 						reader.releaseLock();
 						break;
 					}
-
-					if (buffer >=0) {
-						buffer--;
-					} else {
-						if (builderString !== "\n") {
-							builderString += value;
-						}
-					}
 					
-					if (value.includes("*") && buffer <= 0){	
-						this.setState({ rawSerial: this.state.rawSerial + builderString });
-						builderString = builderString.substring(builderString.indexOf("{"), builderString.indexOf("*") ); 
-						this.parseInput(builderString);
-						builderString = "";
+					if (buffer > 0) { 
+						buffer--;
+					}
+					else {
+						for (let char of value) {
+							if (char !== "\n") {
+								builderString += char;
+								console.log(char);
+							}
+
+							if (char == "*")  {
+								this.setState({ rawSerial: this.state.rawSerial + builderString });
+								let fullDataString = builderString.substring(builderString.indexOf("{"), builderString.indexOf("*"));
+								this.parseInput(fullDataString);
+								builderString = "";
+							}
+						}
 					}
 				}
 			} catch (error) {
@@ -162,7 +169,7 @@ class App extends Component {
 
 	parseInput(input){
 		try{
-			let parsed = JSON.parse(input);
+			let parsed = JSON5.parse(input);
 			let data = {};
 			
 			if (parsed["ID"] == "P") data["ID"] = "PAYLOAD"; 
@@ -206,7 +213,6 @@ class App extends Component {
 				ROLL: parsed["IMU"][7],
 				YAW: parsed["IMU"][8]
 			}
-
 			this.setState({data: data});
 		} catch (err){
 			console.error(err);

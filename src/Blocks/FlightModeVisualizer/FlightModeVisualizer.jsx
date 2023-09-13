@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import "../FlightModeVisualizer/FlightModeVisualizer.css"
 
-export default class FlightModeVisualizer extends Component {
+class FlightModeVisualizer extends Component {
 	render() {
     	return (
 			<div id="flight-mode-visualizer">
@@ -17,3 +17,5 @@ export default class FlightModeVisualizer extends Component {
 		)
 	}
 }
+
+export default FlightModeVisualizer;
