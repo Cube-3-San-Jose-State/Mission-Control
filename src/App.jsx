@@ -70,7 +70,7 @@ class App extends Component {
 						<IMUVisualizer imu={this.state.data["IMU"]} timestamp={this.state.data["TIMESTAMP"]}/>
 					</div> 
 					<div className="block">
-						<LeafMap></LeafMap>
+						<LeafMap lati={this.state.data.GPS["LATITUDE"]} long={this.state.data.GPS["LONGITUDE"]}></LeafMap>
 					</div>
 					<div className="block">
 					<TimeGraph 
